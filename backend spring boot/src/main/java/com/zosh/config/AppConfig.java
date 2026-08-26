@@ -21,50 +21,65 @@ import jakarta.servlet.http.HttpServletRequest;
 @EnableWebSecurity
 public class AppConfig {
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(Authorize -> Authorize
-						.requestMatchers("/api/**").authenticated()
-						.anyRequest().permitAll()
-				)
-				.addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
-				.csrf(csrf -> csrf.disable())
-				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-				.httpBasic(basic -> {})
-				.formLogin(form -> {});
+        http
+            .sessionManagement(management ->
+                management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .authorizeHttpRequests(authorize ->
+                authorize
+                    .requestMatchers("/api/**").authenticated()
+                    .anyRequest().permitAll()
+            )
+            .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .httpBasic(basic -> {})
+            .formLogin(form -> {});
 
-		return http.build();
-	}
+        return http.build();
+    }
 
-	// CORS Configuration allowing localhost and all Vercel domains
-	private CorsConfigurationSource corsConfigurationSource() {
-		return new CorsConfigurationSource() {
-			@Override
-			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-				CorsConfiguration cfg = new CorsConfiguration();
-				cfg.setAllowedOriginPatterns(Arrays.asList(
-						"http://localhost:3000",
-						"http://localhost:4000",
-						"http://localhost:4200",
-						"http://localhost:5173",
-						"https://*.vercel.app",
-						"*"
-				));
-				cfg.setAllowedMethods(Collections.singletonList("*"));
-				cfg.setAllowCredentials(true);
-				cfg.setAllowedHeaders(Collections.singletonList("*"));
-				cfg.setExposedHeaders(Arrays.asList("Authorization"));
-				cfg.setMaxAge(3600L);
-				return cfg;
-			}
-		};
-	}
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+        return new CorsConfigurationSource() {
 
+            @Override
+            public CorsConfiguration getCorsConfiguration(
+                    HttpServletRequest request) {
+
+                CorsConfiguration cfg = new CorsConfiguration();
+
+                cfg.setAllowedOrigins(Arrays.asList(
+                    "http://localhost:3000",
+                    "http://localhost:4000",
+                    "http://localhost:4200",
+                    "http://localhost:5173",
+                    "https://twitter-clone-deploy-sigma.vercel.app"
+                ));
+
+                cfg.setAllowedMethods(Collections.singletonList("*"));
+
+                cfg.setAllowedHeaders(Collections.singletonList("*"));
+
+                cfg.setExposedHeaders(
+                    Collections.singletonList("Authorization")
+                );
+
+                cfg.setAllowCredentials(true);
+
+                cfg.setMaxAge(3600L);
+
+                return cfg;
+            }
+        };
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
