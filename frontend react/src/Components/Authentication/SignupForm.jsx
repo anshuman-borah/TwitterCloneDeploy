@@ -21,17 +21,31 @@ const validationSchema = Yup.object().shape({
 });
 
 const days = Array.from({ length: 31 }, (_, i) => i + 1);
+
 const months = [
   { value: 1, label: "January" },
   { value: 2, label: "February" },
-  // Add other months here
+  { value: 3, label: "March" },
+  { value: 4, label: "April" },
+  { value: 5, label: "May" },
+  { value: 6, label: "June" },
+  { value: 7, label: "July" },
+  { value: 8, label: "August" },
+  { value: 9, label: "September" },
+  { value: 10, label: "October" },
+  { value: 11, label: "November" },
+  { value: 12, label: "December" },
 ];
+
 const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
+
+const years = Array.from(
+  { length: 100 },
+  (_, i) => currentYear - i
+);
 
 const SignupForm = () => {
   const dispatch = useDispatch();
-
 
   const formik = useFormik({
     initialValues: {
@@ -44,14 +58,22 @@ const SignupForm = () => {
         year: "",
       },
     },
+
     validationSchema,
+
     onSubmit: (values) => {
       const { day, month, year } = values.dateOfBirth;
-      const dateOfBirth = `${year}-${month}-${day}`;
-      values.dateOfBirth = dateOfBirth;
 
-      console.log(values);
-      dispatch(registerUser(values))
+      const dateOfBirth = `${year}-${month}-${day}`;
+
+      const signupData = {
+        ...values,
+        dateOfBirth,
+      };
+
+      console.log("Signup data:", signupData);
+
+      dispatch(registerUser(signupData));
     },
   });
 
@@ -65,6 +87,7 @@ const SignupForm = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={2}>
+
         <Grid item xs={12}>
           <TextField
             name="fullName"
@@ -75,10 +98,17 @@ const SignupForm = () => {
             value={formik.values.fullName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.fullName && Boolean(formik.errors.fullName)}
-            helperText={formik.touched.fullName && formik.errors.fullName}
+            error={
+              formik.touched.fullName &&
+              Boolean(formik.errors.fullName)
+            }
+            helperText={
+              formik.touched.fullName &&
+              formik.errors.fullName
+            }
           />
         </Grid>
+
         <Grid item xs={12}>
           <TextField
             className="w-full"
@@ -90,10 +120,17 @@ const SignupForm = () => {
             value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
+            error={
+              formik.touched.email &&
+              Boolean(formik.errors.email)
+            }
+            helperText={
+              formik.touched.email &&
+              formik.errors.email
+            }
           />
         </Grid>
+
         <Grid item xs={12}>
           <TextField
             name="password"
@@ -105,20 +142,26 @@ const SignupForm = () => {
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
+            error={
+              formik.touched.password &&
+              Boolean(formik.errors.password)
+            }
+            helperText={
+              formik.touched.password &&
+              formik.errors.password
+            }
           />
         </Grid>
+
+        {/* DAY */}
         <Grid item xs={4}>
           <InputLabel>Date</InputLabel>
+
           <Select
             name="day"
             value={formik.values.dateOfBirth.day}
             onChange={handleDateChange("day")}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.dateOfBirth && Boolean(formik.errors.dateOfBirth)
-            }
             className="w-full"
           >
             {days.map((day) => (
@@ -128,35 +171,38 @@ const SignupForm = () => {
             ))}
           </Select>
         </Grid>
+
+        {/* MONTH */}
         <Grid item xs={4}>
           <InputLabel>Month</InputLabel>
+
           <Select
             name="month"
             value={formik.values.dateOfBirth.month}
             onChange={handleDateChange("month")}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.dateOfBirth && Boolean(formik.errors.dateOfBirth)
-            }
             className="w-full"
           >
             {months.map((month) => (
-              <MenuItem key={month.value} value={month.value}>
+              <MenuItem
+                key={month.value}
+                value={month.value}
+              >
                 {month.label}
               </MenuItem>
             ))}
           </Select>
         </Grid>
+
+        {/* YEAR */}
         <Grid item xs={4}>
           <InputLabel>Year</InputLabel>
+
           <Select
             name="year"
             value={formik.values.dateOfBirth.year}
             onChange={handleDateChange("year")}
             onBlur={formik.handleBlur}
-            error={
-              formik.touched.dateOfBirth && Boolean(formik.errors.dateOfBirth)
-            }
             className="w-full"
           >
             {years.map((year) => (
@@ -166,11 +212,16 @@ const SignupForm = () => {
             ))}
           </Select>
         </Grid>
+
         <Grid item xs={12}>
-          {formik.touched.dateOfBirth && formik.errors.dateOfBirth && (
-            <div className="text-red-500">{formik.errors.dateOfBirth}</div>
-          )}
+          {formik.touched.dateOfBirth &&
+            formik.errors.dateOfBirth && (
+              <div className="text-red-500">
+                {formik.errors.dateOfBirth}
+              </div>
+            )}
         </Grid>
+
         <Grid className="mt-20" item xs={12}>
           <Button
             type="submit"
@@ -186,6 +237,7 @@ const SignupForm = () => {
             Signup
           </Button>
         </Grid>
+
       </Grid>
     </form>
   );
