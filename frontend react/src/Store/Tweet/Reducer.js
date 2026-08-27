@@ -1,4 +1,3 @@
-// reducer.js
 import {
   TWEET_CREATE_REQUEST,
   TWEET_CREATE_SUCCESS,
@@ -31,8 +30,10 @@ const initialState = {
   data: null,
   error: null,
   twits: [],
-  twit:null
-  // usersTwit
+  twit: null,
+  likedTwits: [],
+  retwit: null,
+  like: null,
 };
 
 const tweetReducer = (state = initialState, action) => {
@@ -48,14 +49,16 @@ const tweetReducer = (state = initialState, action) => {
         loading: true,
         error: null,
       };
+
     case GET_ALL_TWEETS_REQUEST:
     case GET_USERS_TWEET_REQUEST:
-          return {
-            ...state,
-            loading: true,
-            error: null,
-            twits:[]
-          };
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        twits: [],
+      };
+
     case TWEET_CREATE_FAILURE:
     case TWEET_DELETE_FAILURE:
     case GET_ALL_TWEETS_FAILURE:
@@ -70,57 +73,58 @@ const tweetReducer = (state = initialState, action) => {
       };
 
     case TWEET_CREATE_SUCCESS:
-      console.log(" action ", action.payload);
       return {
         ...state,
         loading: false,
         twits: [action.payload, ...state.twits],
         error: null,
       };
+
     case GET_ALL_TWEETS_SUCCESS:
     case GET_USERS_TWEET_SUCCESS:
-    // case USER_LIKE_TWEET_SUCCESS:
       return {
         ...state,
         loading: false,
         twits: action.payload,
         error: null,
       };
-      case USER_LIKE_TWEET_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          likedTwits: action.payload,
-          error: null,
-        };
-    case LIKE_TWEET_SUCCESS:
-      return{
-        ...state,
-        loading:false,
-        error:null,
-        like:action.payload
-      }
-    case TWEET_DELETE_SUCCESS:
-      const twitIdToDelete = action.payload;
+
+    case USER_LIKE_TWEET_SUCCESS:
       return {
         ...state,
         loading: false,
-        twits: state.twits.filter((twit) => twit.id !== twitIdToDelete),
+        likedTwits: action.payload,
         error: null,
       };
 
-      case RETWEET_CREATE_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          retwit: action.payload,
-          error: null,
-        };
+    case LIKE_TWEET_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        like: action.payload,
+      };
 
-      case FIND_TWEET_BY_ID_SUCCESS:
-      case REPLY_TWEET_SUCCESS:
-        return {...state,loading:false,twit:action.payload,error:null}
-      
+    case TWEET_DELETE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        twits: state.twits.filter((twit) => twit.id !== action.payload),
+        error: null,
+      };
+
+    case RETWEET_CREATE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        retwit: action.payload,
+        error: null,
+      };
+
+    case FIND_TWEET_BY_ID_SUCCESS:
+    case REPLY_TWEET_SUCCESS:
+      return { ...state, loading: false, twit: action.payload, error: null };
+
     default:
       return state;
   }
