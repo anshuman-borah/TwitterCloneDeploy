@@ -1,15 +1,15 @@
-import { Route, Routes } from 'react-router-dom';
-import './App.css';
-import Authentication from './Components/Authentication/Authentication';
-import HomePage from './Components/HomePage';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { getUserProfile } from './Store/Auth/Action';
-import darkTheme from './Theme/DarkTheme';
-import lightTheme from './Theme/LightTheme';
-import { Box, CssBaseline } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import VerifiedSuccess from './Components/VerifiedSuccess/VerifiedSuccess';
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import Authentication from "./Components/Authentication/Authentication";
+import HomePage from "./Components/HomePage";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getUserProfile } from "./Store/Auth/Action";
+import darkTheme from "./Theme/DarkTheme";
+import lightTheme from "./Theme/LightTheme";
+import { Box, CssBaseline } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import VerifiedSuccess from "./Components/VerifiedSuccess/VerifiedSuccess";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,12 +35,9 @@ function App() {
       <CssBaseline />
       <Box>
         <Routes>
-          {/* Auth routes */}
           <Route path="/signin" element={<Authentication />} />
           <Route path="/signup" element={<Authentication />} />
           <Route path="/verified" element={<VerifiedSuccess />} />
-
-          {/* Everything else handled by HomePage (which contains its own routes) */}
           <Route
             path="/*"
             element={auth.user?.fullName ? <HomePage /> : <Authentication />}
