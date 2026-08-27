@@ -1,4 +1,3 @@
-// authActions.js
 import axios from "axios";
 import {
   LOGIN_REQUEST,
@@ -9,6 +8,7 @@ import {
   REGISTER_FAILURE,
   GET_PROFILE_REUEST,
   GET_PROFILE_SUCCESS,
+  GET_PROFILE_FAILURE,
   LOGOUT,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
@@ -59,12 +59,14 @@ export const registerFailure = (error) => ({
 const getUserProfileRequest = () => ({
   type: GET_PROFILE_REUEST,
 });
+
 const getUserProfileSuccess = (user) => ({
   type: GET_PROFILE_SUCCESS,
   payload: user,
 });
+
 const getUserProfileFailure = (error) => ({
-  type: GET_PROFILE_SUCCESS,
+  type: GET_PROFILE_FAILURE,
   payload: error,
 });
 
@@ -84,7 +86,7 @@ export const loginUser = (loginData) => async (dispatch) => {
 };
 
 export const loginWithGoogleAction = (data) => async (dispatch) => {
-  dispatch({type:GOOGLE_LOGIN_REQUEST});
+  dispatch({ type: GOOGLE_LOGIN_REQUEST });
   try {
     const response = await axios.post(`${API_BASE_URL}/auth/signin/google`, data);
     const user = response.data;
@@ -92,13 +94,14 @@ export const loginWithGoogleAction = (data) => async (dispatch) => {
     if (user.jwt) {
       localStorage.setItem("jwt", user.jwt);
     }
-    dispatch({type:GOOGLE_LOGIN_SUCCESS,payload:user.jwt});
+    dispatch({ type: GOOGLE_LOGIN_SUCCESS, payload: user });
   } catch (error) {
-    dispatch({type:GOOGLE_LOGIN_FAILURE, payload: error.message || "An error occurred during login."});
+    dispatch({
+      type: GOOGLE_LOGIN_FAILURE,
+      payload: error.message || "An error occurred during login.",
+    });
   }
 };
-
-// /signin/google
 
 export const registerUser = (userData) => async (dispatch) => {
   dispatch(registerRequest());
@@ -120,84 +123,72 @@ export const registerUser = (userData) => async (dispatch) => {
 export const getUserProfile = (jwt) => async (dispatch) => {
   dispatch(getUserProfileRequest());
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/users/profile`,{
-      headers:{
-        "Authorization":`Bearer ${jwt}`,
-
-      }
+    const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
     });
     const user = response.data;
-    console.log("login user -: ", user);
-   
+    console.log("profile user -: ", user);
     dispatch(getUserProfileSuccess(user));
   } catch (error) {
     dispatch(
-      getUserProfileFailure(error.message || "An error occurred during login.")
+      getUserProfileFailure(error.message || "An error occurred fetching profile.")
     );
   }
 };
 
 export const findUserById = (userId) => async (dispatch) => {
-  dispatch({type:FIND_USER_BY_ID_REQUEST})
+  dispatch({ type: FIND_USER_BY_ID_REQUEST });
   try {
     const response = await api.get(`/api/users/${userId}`);
     const user = response.data;
     console.log("find by id user -: ", user);
-   
-    dispatch({type:FIND_USER_BY_ID_SUCCESS,payload:user});
+    dispatch({ type: FIND_USER_BY_ID_SUCCESS, payload: user });
   } catch (error) {
-    dispatch(
-      {type:FIND_USER_BY_ID_FILURE,error:error.message}
-    );
+    dispatch({ type: FIND_USER_BY_ID_FILURE, error: error.message });
   }
 };
 
 export const searchUser = (query) => async (dispatch) => {
-  dispatch({type:SEARCH_USER_REQUEST})
+  dispatch({ type: SEARCH_USER_REQUEST });
   try {
     const response = await api.get(`/api/users/search?query=${query}`);
     const users = response.data;
     console.log("search result -: ", users);
-   
-    dispatch({type:SEARCH_USER_SUCCESS,payload:users});
+    dispatch({ type: SEARCH_USER_SUCCESS, payload: users });
   } catch (error) {
-    dispatch(
-      {type:SEARCH_USER_FAILURE,error:error.message}
-    );
+    dispatch({ type: SEARCH_USER_FAILURE, error: error.message });
   }
 };
-    
+
 export const updateUserProfile = (reqData) => async (dispatch) => {
-  console.log("updatte profile reqData",reqData)
-  dispatch({type:UPDATE_USER_REQUEST})
+  console.log("update profile reqData", reqData);
+  dispatch({ type: UPDATE_USER_REQUEST });
   try {
-    const response = await api.put(`/api/users/update`,reqData);
+    const response = await api.put(`/api/users/update`, reqData);
     const user = response.data;
     console.log("updated user -: ", user);
-   
-    dispatch({type:UPDATE_USER_SUCCESS,payload:user});
+    dispatch({ type: UPDATE_USER_SUCCESS, payload: user });
   } catch (error) {
-    dispatch({type:UPDATE_USER_FAILURE,payload:error.message});
+    dispatch({ type: UPDATE_USER_FAILURE, payload: error.message });
   }
 };
 
 export const FollowUserAction = (userId) => async (dispatch) => {
-  // console.log("updatte profile reqData",reqData)
-  dispatch({type:FOLLOW_USER_REQUEST})
+  dispatch({ type: FOLLOW_USER_REQUEST });
   try {
     const response = await api.put(`/api/users/${userId}/follow`);
     const user = response.data;
     console.log("follow user -: ", user);
-   
-    dispatch({type:FOLLOW_USER_SUCCESS,payload:user});
+    dispatch({ type: FOLLOW_USER_SUCCESS, payload: user });
   } catch (error) {
-    console.log("catch error ",error)
-    dispatch({type:FOLLOW_USER_FAILURE,payload:error.message});
+    console.log("catch error ", error);
+    dispatch({ type: FOLLOW_USER_FAILURE, payload: error.message });
   }
 };
 
-export const logout = (navigate) => (dispatch) => {
-  // navigate("/")
+export const logout = () => (dispatch) => {
   localStorage.removeItem("jwt");
   dispatch({ type: LOGOUT, payload: null });
 };
