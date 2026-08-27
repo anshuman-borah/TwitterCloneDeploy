@@ -6,11 +6,11 @@ import HomeSection from "./Home/MiddlePart/HomeSection";
 import RightPart from "./RightPart/RightPart";
 import Profile from "./Profile/Profile";
 import TwitDetail from "./Home/MiddlePart/TwitDetail/TwitDetail";
-import Explore from "./Home/MiddlePart/Explore";
-import Notifications from "./Home/MiddlePart/Notifications";
-import Messages from "./Home/MiddlePart/Messages";
-import Lists from "./Home/MiddlePart/Lists";
-import Communities from "./Home/MiddlePart/Communities";
+import Explore from "./Explore";
+import Notifications from "./Notifications";
+import Messages from "./Messages";
+import Lists from "./Lists";
+import Communities from "./Communities";
 
 const HomePage = () => {
   return (
