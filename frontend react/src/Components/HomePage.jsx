@@ -5,7 +5,7 @@ import Navigation from "./Navigation/Navigation";
 import HomeSection from "./Home/MiddlePart/HomeSection";
 import RightPart from "./RightPart/RightPart";
 import Profile from "./Profile/Profile";
-import TwitDetail from "./Home/MiddlePart/TwitDetail/TwitDetail";
+import TwitDetail from "./Home/MiddlePart/TwitDetail"; // <-- FIXED IMPORT PATH
 import Explore from "./Explore";
 import Notifications from "./Notifications";
 import Messages from "./Messages";
