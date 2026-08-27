@@ -4,9 +4,9 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Avatar, Button } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import { useDispatch, useSelector } from "react-redux";
-import { changeTheme } from "../../../Store/Theme/Action";
+import { changeTheme } from "../../Store/Theme/Action";
 import SubscriptionModel from "./SubscriptionModel";
-import { searchUser } from "../../../Store/Auth/Action";
+import { searchUser } from "../../Store/Auth/Action";
 import { useNavigate } from "react-router-dom";
 
 const RightPart = () => {
