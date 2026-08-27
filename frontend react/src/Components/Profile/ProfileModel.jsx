@@ -13,7 +13,7 @@ import { uploadToCloudinary } from "../../Utils/UploadToCloudinary";
 import BackdropComponent from "../Backdrop/Backdrop";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserProfile } from "../../Store/Auth/Action";
-import "./ProfileModel.css"
+import "./ProfileModel.css";
 
 const style = {
   position: "absolute",
@@ -21,59 +21,59 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 600,
-  //   height: "90vh",
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 2,
   borderRadius: 3,
   outline: "none",
-  overflow: "scroll-y",
+  overflowY: "scroll",
 };
 
-const ProfileModel = ({ handleClose,open }) => {
-    const [uploading,setUploading]=useState(false);
-    const dispatch=useDispatch();
-    const {auth}=useSelector(store=>store);
+const ProfileModel = ({ handleClose, open }) => {
+  const [uploading, setUploading] = useState(false);
+  const dispatch = useDispatch();
+  const { auth } = useSelector((store) => store);
 
   const handleSubmit = (values) => {
-    dispatch(updateUserProfile(values))
+    dispatch(updateUserProfile(values));
     console.log(values);
-    handleClose()
+    handleClose();
   };
+
   const formik = useFormik({
     initialValues: {
       fullName: "",
       website: "",
       location: "",
       bio: "",
-      backgroundImage:"",
-      image:""
+      backgroundImage: "",
+      image: "",
     },
     onSubmit: handleSubmit,
   });
 
-  useEffect(()=>{
+  useEffect(() => {
+    if (auth.user) {
+      formik.setValues({
+        fullName: auth.user.fullName || "",
+        website: auth.user.website || "",
+        location: auth.user.location || "",
+        bio: auth.user.bio || "",
+        backgroundImage: auth.user.backgroundImage || "",
+        image: auth.user.image || "",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.user]);
 
-    formik.setValues({
-      fullName: auth.user.fullName || "",
-      website: auth.user.website || "",
-      location: auth.user.location || "",
-      bio: auth.user.bio || "",
-      backgroundImage: auth.user.backgroundImage || "",
-      image: auth.user.image || "",
-    });
-
-  },[auth.user])
-
-  const handleImageChange=async(event)=>{
-    setUploading(true)
-    const {name}=event.target;
+  const handleImageChange = async (event) => {
+    setUploading(true);
+    const { name } = event.target;
     const file = event.target.files[0];
-    const url=await uploadToCloudinary(file,"image");
-    formik.setFieldValue(name,url);
+    const url = await uploadToCloudinary(file, "image");
+    formik.setFieldValue(name, url);
     setUploading(false);
-
-  }
+  };
 
   return (
     <div>
@@ -87,28 +87,26 @@ const ProfileModel = ({ handleClose,open }) => {
           <form onSubmit={formik.handleSubmit}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <IconButton onClick={handleClose} aria-label="delete">
+                <IconButton onClick={handleClose} aria-label="close">
                   <CloseIcon />
                 </IconButton>
                 <p>Edit Profile</p>
               </div>
-
               <Button type="submit">Save</Button>
             </div>
 
-            <div className="customeScrollbar overflow-y-scroll  overflow-x-hidden h-[80vh]">
-              <div className="">
+            <div className="customeScrollbar overflow-y-scroll overflow-x-hidden h-[80vh]">
+              <div>
                 <div className="w-full">
-                  <div className="relative ">
+                  <div className="relative">
                     <img
                       src={
                         formik.values.backgroundImage ||
                         "https://cdn.pixabay.com/photo/2018/10/16/15/01/background-image-3751623_1280.jpg"
                       }
-                      alt="Img"
+                      alt="Background"
                       className="w-full h-[12rem] object-cover object-center"
                     />
-                    {/* Hidden file input */}
                     <input
                       type="file"
                       className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
@@ -119,19 +117,16 @@ const ProfileModel = ({ handleClose,open }) => {
                 </div>
 
                 <div className="w-full transform -translate-y-20 translate-x-4 h-[6rem]">
-                  <div className="relative borde ">
+                  <div className="relative">
                     <Avatar
-                      src={
-                        formik.values.image 
-                      }
-                      alt="Img"
+                      src={formik.values.image}
+                      alt="Profile"
                       sx={{
                         width: "10rem",
                         height: "10rem",
                         border: "4px solid white",
                       }}
                     />
-                    {/* Hidden file input */}
                     <input
                       type="file"
                       className="absolute top-0 left-0 w-[10rem] h-full opacity-0 cursor-pointer"
@@ -141,6 +136,7 @@ const ProfileModel = ({ handleClose,open }) => {
                   </div>
                 </div>
               </div>
+
               <div className="space-y-3">
                 <TextField
                   fullWidth
@@ -149,8 +145,10 @@ const ProfileModel = ({ handleClose,open }) => {
                   label="Full Name"
                   value={formik.values.fullName}
                   onChange={formik.handleChange}
-                  error={formik.touched.name && Boolean(formik.errors.fullName)}
-                  helperText={formik.touched.name && formik.errors.fullName}
+                  error={
+                    formik.touched.fullName && Boolean(formik.errors.fullName)
+                  }
+                  helperText={formik.touched.fullName && formik.errors.fullName}
                 />
                 <TextField
                   fullWidth
@@ -189,22 +187,16 @@ const ProfileModel = ({ handleClose,open }) => {
                   helperText={formik.touched.location && formik.errors.location}
                 />
               </div>
-               <div className="my-3">
-              <p className="text-lg">Birth date · Edit</p>
-              <p className="text-2xl"> October 26, 1999</p>
-
+              <div className="my-3">
+                <p className="text-lg">Birth date · Edit</p>
+                <p className="text-2xl">October 26, 1999</p>
+              </div>
+              <p className="py-3 text-lg">Edit Professional Profile</p>
             </div>
-            <p className="py-3 text-lg">
-                Edit Professional Profile
-            </p>
-            </div>
-            <BackdropComponent open={uploading}/>
-          
+            <BackdropComponent open={uploading} />
           </form>
         </Box>
-        
       </Modal>
-      
     </div>
   );
 };
