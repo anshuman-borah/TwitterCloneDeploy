@@ -29,46 +29,47 @@ const Authentication = () => {
     }
   }, [location.pathname]);
 
-  const loginWithGoole = (res) => {
+  const loginWithGoogle = (res) => {
     console.log("res : ", res);
     dispatch(loginWithGoogleAction(res));
-    // return
   };
 
   return (
-    <div className="">
-      {" "}
+    <div>
       <Grid className="overflow-y-hidden" container>
         <Grid className="hidden lg:block" item lg={7}>
           <img
-            className="w-full h-screen"
+            className="w-full h-screen object-cover"
             src="https://abs.twimg.com/sticky/illustrations/lohp_en_1302x955.png"
             alt=""
           />
 
           <div className="absolute top-[26%] left-[19%]">
             <svg
-            height="300" width="300"
+              height="300"
+              width="300"
               viewBox="0 0 24 24"
               aria-hidden="true"
-              class="r-jwli3a r-4qtqp9 r-yyyyoo r-labphf r-1777fci r-dnmrzs r-494qqr r-bnwqim r-1plcrui r-lrvibr"
+              className="r-jwli3a r-4qtqp9 r-yyyyoo r-labphf r-1777fci r-dnmrzs r-494qqr r-bnwqim r-1plcrui r-lrvibr"
             >
               <g>
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
               </g>
             </svg>
           </div>
-
-          {/* 
-        <img className=" w-[50rem] absolute -top-5" src="https://cdn.pixabay.com/photo/2021/03/02/12/04/twitter-6062249_640.png" alt="" /> */}
         </Grid>
         <Grid className="px-10" item lg={5} xs={12}>
           <div className="py-10">
-            <img
-              className="w-16"
-              src="https://pbs.twimg.com/media/F1iAD_iaYAAu7I3?format=jpg&name=small"
-              alt=""
-            />
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="w-12 h-12"
+              fill="currentColor"
+            >
+              <g>
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+              </g>
+            </svg>
           </div>
 
           <h1 className="font-bold text-7xl">Happening now</h1>
@@ -77,18 +78,9 @@ const Authentication = () => {
 
           <div className="w-[60%]">
             <div className="w-full">
-              {/* <button 
-            className="w-full flex justify-center items-center border border-gray-400 py-2 px-7 rounded-full bg-white shadow-md text-gray-600">
-              <img
-                src="https://www.google.com/images/hpp/ic_wahlberg_product_core_48.png8.png"
-                alt="Google Logo"
-                className="h-6 w-6 mr-2"
-              />
-              Sign Up with Google
-            </button> */}
               <GoogleLogin
                 width={330}
-                onSuccess={loginWithGoole}
+                onSuccess={loginWithGoogle}
                 onError={() => {
                   console.log("Login Failed");
                 }}
