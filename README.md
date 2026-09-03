@@ -130,7 +130,7 @@ Cloudinary is used to store and serve uploaded media, while Stripe handles the p
 
 ### User Profile
 
-![User Profile](profile.jpeg)
+![User Profile](profile1.jpeg)
 
 ### Home / FYP
 
